@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grupo 1 - Perguntas</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Montserrat',sans-serif;
+}
+
+body{
+  height:100vh;
+  overflow:hidden;
+  background:#000;
+  color:white;
+}
+
+/* TELAS */
+.screen{
+  position:fixed;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:2rem;
+}
+
+.hidden{
+  display:none;
+}
+
+/* TÍTULO */
+.title{
+  font-size:clamp(3rem,9vw,5rem);
+  font-weight:800;
+  margin-bottom:1.5rem;
+
+  background:linear-gradient(
+    90deg,
+    #ff0000,
+    #ff8400,
+    #ffcc00,
+    #00ff2a,
+    #008cff,
+    #4000ff,
+    #cc00ff
+  );
+
+  background-size:200% 200%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:rainbowTitle 15s ease-in-out infinite;
+}
+
+@keyframes rainbowTitle{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+.subtitle{
+  font-size:clamp(1.1rem,3.5vw,1.4rem);
+  font-weight:300;
+  margin-bottom:2.5rem;
+}
+
+/* BOTÃO */
+.btn{
+  padding:14px 40px;
+  font-size:1.1rem;
+  font-weight:600;
+  color:white;
+  background:transparent;
+  border:1.5px solid white;
+  border-radius:50px;
+  cursor:pointer;
+  transition:.3s;
+  min-width:200px;
+}
+
+.btn:hover{
+  background:white;
+  color:black;
+  transform:scale(1.05);
+}
+
+/* CONTADOR */
+.count-number{
+  position:absolute;
+  font-size:clamp(12rem,30vw,22rem);
+  font-weight:900;
+
+  background:linear-gradient(
+    90deg,
+    #ff0000,
+    #ff8400,
+    #ffcc00,
+    #00ff2a,
+    #008cff,
+    #4000ff,
+    #cc00ff
+  );
+
+  background-size:200% 200%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+
+  animation:rainbowCount 12s ease-in-out infinite;
+
+  opacity:0;
+  transform:scale(.8);
+  transition:.6s;
+}
+
+.count-number.show{
+  opacity:1;
+  transform:scale(1);
+}
+
+@keyframes rainbowCount{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+/* QUIZ */
+.card{
+  background:#111;
+  border:1px solid #222;
+  border-radius:20px;
+  padding:2rem;
+  width:100%;
+  max-width:700px;
+  margin:1rem 0;
+}
+
+/* Fade suave */
+.fade-element{
+  opacity:1;
+  transform:translateY(0);
+  transition:opacity .4s ease, transform .4s ease;
+}
+
+.fade-out{
+  opacity:0;
+  transform:translateY(15px);
+  pointer-events:none;
+}
+
+.fade-in{
+  opacity:1;
+  transform:translateY(0);
+}
+
+#pergunta{
+  font-size:clamp(1.6rem,4vw,2rem);
+  font-weight:600;
+  margin-bottom:2rem;
+}
+
+#resposta{
+  font-size:clamp(1.2rem,3vw,1.4rem);
+  font-weight:300;
+  margin-bottom:2rem;
+}
+</style>
+</head>
+
+<body>
+
+<!-- INÍCIO -->
+<section id="inicio" class="screen">
+  <h1 class="title">Perguntas do Grupo 3</h1>
+  <p class="subtitle">Tudo pronto para começar?</p>
+  <button class="btn" onclick="iniciar()">Estou pronto</button>
+</section>
+
+<!-- CONTADOR -->
+<section id="contador" class="screen hidden">
+  <div class="count-number" id="c3">3</div>
+  <div class="count-number" id="c2">2</div>
+  <div class="count-number" id="c1">1</div>
+  <div class="count-number" id="cGo">VAI!</div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="screen hidden">
+
+  <div class="card fade-element" id="perguntaCard">
+    <div id="pergunta"></div>
+    <button class="btn" onclick="mostrarResposta()">Mostrar resposta</button>
+  </div>
+
+  <div class="card fade-element fade-out" id="respostaCard">
+    <div id="resposta"></div>
+    <button class="btn" onclick="proximaPergunta()">Próxima pergunta</button>
+  </div>
+
+</section>
+
+<script>
+const perguntas = [
+  { pergunta: "01 - O que é variável em programação?", resposta: "Espaço da memória que guarda dados." },
+  { pergunta: "02 - Qual a diferença de for e while?", resposta: "For = usamos quando sabemos o número de repetições. While = usamos quando não sabemos o número de repetições." },
+  { pergunta: "03 - Explique o conceito de escopo.", resposta: "Define onde uma variável pode ser acessada no código." },
+  { pergunta: "04 - O que significa CSS?", resposta: "Cascading Style Sheets." },
+  { pergunta: "05 - Alto acoplamento em um sistema pode causar?", resposta: "Dificuldade de manutenção." },
+  { pergunta: "06 - O que melhor define escalabilidade?", resposta: "Capacidade de crescer mantendo desempenho." },
+  { pergunta: "07 - Cite quatro pilares da Programação Orientada a Objetos.", resposta: "Encapsulamento, Abstração, Herança e Polimorfismo." },
+  { pergunta: "08 - Sistema usa autenticação, mas não valida autorização corretamente nas rotas de API. Qual vulnerabilidade está presente?", resposta: "Broken Access Control." },
+  { pergunta: "09 - Por que a comunicação é considerada tão importante quanto a análise de dados?", resposta: "Porque não adianta apenas analisar corretamente os dados se eles não forem compreendidos pelos superiores. A comunicação eficaz transforma números em informações úteis para a tomada de decisão." },
+  { pergunta: "10 - O que pode acontecer quando a comunicação dos dados é confusa ou muito técnica?", resposta: "A mensagem pode não ser entendida, oportunidades podem ser perdidas e o reconhecimento do trabalho pode ser limitado." },
+  { pergunta: "11 - O que significa 'traduzir a complexidade dos dados'?", resposta: "Significa explicar resultados estatísticos de forma simples, clara e acessível, adaptando a linguagem ao nível de conhecimento de quem está ouvindo." },
+  { pergunta: "12 - Por que apenas apresentar números e gráficos não é suficiente?", resposta: "Porque é necessário explicar o contexto, a relevância e o impacto daqueles dados para a empresa." },
+  { pergunta: "13 - Como explicar um conceito estatístico para alguém que não é da área?", resposta: "Utilizando linguagem simples, exemplos práticos e evitando jargões técnicos desnecessários." },
+  { pergunta: "14 - O que significa eliminar desperdícios no Lean?", resposta: "Significa retirar do processo tudo o que não agrega valor ao cliente." },
+  { pergunta: "15 - Cite quatro dos sete desperdícios do Lean.", resposta: "Superprodução, Espera, Transporte e Defeitos. (Também existem: Estoque, Movimentação e Excesso de processamento.)" },
+  { pergunta: "16 - O que é Kaizen?", resposta: "É a melhoria contínua, feita todos os dias com pequenas melhorias." },
+  { pergunta: "17 - Qual empresa desenvolveu o Sistema Toyota de Produção?", resposta: "Toyota Motor Corporation." },
+  { pergunta: "18 - Qual é o principal objetivo do 5S?", resposta: "Melhorar organização, produtividade e ambiente de trabalho." },
+  { pergunta: "19 - O que significa PDCA?", resposta: "Plan (Planejar), Do (Executar), Check (Verificar) e Act (Agir)." },
+  { pergunta: "20 - O que é o ciclo PDCA e qual seu objetivo principal?", resposta: "É um método de melhoria contínua que significa Planejar, Executar, Verificar e Agir. Seu objetivo é melhorar processos de forma organizada e contínua." }
+];
+
+let indice = 0;
+
+function mostrarTela(id){
+  document.querySelectorAll(".screen").forEach(t => t.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+}
+
+function iniciar(){
+  mostrarTela("contador");
+
+  const seq = ["c3","c2","c1","cGo"];
+
+  seq.forEach((id,i)=>{
+    setTimeout(()=>{
+      if(i>0){
+        document.getElementById(seq[i-1]).classList.remove("show");
+      }
+      document.getElementById(id).classList.add("show");
+    }, i*1000);
+  });
+
+  setTimeout(()=>{
+    mostrarTela("quiz");
+    carregarPergunta();
+  },4000);
+}
+
+function carregarPergunta(){
+  const perguntaCard = document.getElementById("perguntaCard");
+  const respostaCard = document.getElementById("respostaCard");
+
+  respostaCard.classList.remove("fade-in");
+  respostaCard.classList.add("fade-out");
+
+  perguntaCard.classList.add("fade-out");
+
+  setTimeout(()=>{
+    document.getElementById("pergunta").textContent =
+      perguntas[indice].pergunta;
+
+    perguntaCard.classList.remove("fade-out");
+    perguntaCard.classList.add("fade-in");
+  },300);
+}
+
+function mostrarResposta(){
+  const respostaCard = document.getElementById("respostaCard");
+
+  document.getElementById("resposta").textContent =
+    perguntas[indice].resposta;
+
+  respostaCard.classList.remove("fade-out");
+  respostaCard.classList.add("fade-in");
+}
+
+function proximaPergunta(){
+  const perguntaCard = document.getElementById("perguntaCard");
+
+  perguntaCard.classList.add("fade-out");
+
+  setTimeout(()=>{
+    indice++;
+    if(indice < perguntas.length){
+      carregarPergunta();
+    } else {
+      document.getElementById("quiz").innerHTML = `
+        <div class="card fade-in">
+          <h1 class="title" style="font-size:clamp(2.5rem,6vw,4rem);">
+            Fim das perguntas!
+          </h1>
+          <p class="subtitle">Parabéns por completar tudo! </p>
+        </div>
+      `;
+    }
+  },300);
+}
+</script>
+
+</body>
+</html>

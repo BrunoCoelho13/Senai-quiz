@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grupo 1 - Perguntas</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Montserrat',sans-serif;
+}
+
+body{
+  height:100vh;
+  overflow:hidden;
+  background:#000;
+  color:white;
+}
+
+/* TELAS */
+.screen{
+  position:fixed;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:2rem;
+}
+
+.hidden{
+  display:none;
+}
+
+/* TÍTULO */
+.title{
+  font-size:clamp(3rem,9vw,5rem);
+  font-weight:800;
+  margin-bottom:1.5rem;
+
+  background:linear-gradient(
+    90deg,
+    #ff0000,
+    #ff8400,
+    #ffcc00,
+    #00ff2a,
+    #008cff,
+    #4000ff,
+    #cc00ff
+  );
+
+  background-size:200% 200%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:rainbowTitle 15s ease-in-out infinite;
+}
+
+@keyframes rainbowTitle{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+.subtitle{
+  font-size:clamp(1.1rem,3.5vw,1.4rem);
+  font-weight:300;
+  margin-bottom:2.5rem;
+}
+
+/* BOTÃO */
+.btn{
+  padding:14px 40px;
+  font-size:1.1rem;
+  font-weight:600;
+  color:white;
+  background:transparent;
+  border:1.5px solid white;
+  border-radius:50px;
+  cursor:pointer;
+  transition:.3s;
+  min-width:200px;
+}
+
+.btn:hover{
+  background:white;
+  color:black;
+  transform:scale(1.05);
+}
+
+/* CONTADOR */
+.count-number{
+  position:absolute;
+  font-size:clamp(12rem,30vw,22rem);
+  font-weight:900;
+
+  background:linear-gradient(
+    90deg,
+    #ff0000,
+    #ff8400,
+    #ffcc00,
+    #00ff2a,
+    #008cff,
+    #4000ff,
+    #cc00ff
+  );
+
+  background-size:200% 200%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+
+  animation:rainbowCount 12s ease-in-out infinite;
+
+  opacity:0;
+  transform:scale(.8);
+  transition:.6s;
+}
+
+.count-number.show{
+  opacity:1;
+  transform:scale(1);
+}
+
+@keyframes rainbowCount{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+/* QUIZ */
+.card{
+  background:#111;
+  border:1px solid #222;
+  border-radius:20px;
+  padding:2rem;
+  width:100%;
+  max-width:700px;
+  margin:1rem 0;
+}
+
+/* Fade suave */
+.fade-element{
+  opacity:1;
+  transform:translateY(0);
+  transition:opacity .4s ease, transform .4s ease;
+}
+
+.fade-out{
+  opacity:0;
+  transform:translateY(15px);
+  pointer-events:none;
+}
+
+.fade-in{
+  opacity:1;
+  transform:translateY(0);
+}
+
+#pergunta{
+  font-size:clamp(1.6rem,4vw,2rem);
+  font-weight:600;
+  margin-bottom:2rem;
+}
+
+#resposta{
+  font-size:clamp(1.2rem,3vw,1.4rem);
+  font-weight:300;
+  margin-bottom:2rem;
+}
+</style>
+</head>
+
+<body>
+
+<!-- INÍCIO -->
+<section id="inicio" class="screen">
+  <h1 class="title">Perguntas do Grupo 1</h1>
+  <p class="subtitle">Tudo pronto para começar?</p>
+  <button class="btn" onclick="iniciar()">Estou pronto</button>
+</section>
+
+<!-- CONTADOR -->
+<section id="contador" class="screen hidden">
+  <div class="count-number" id="c3">3</div>
+  <div class="count-number" id="c2">2</div>
+  <div class="count-number" id="c1">1</div>
+  <div class="count-number" id="cGo">VAI!</div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="screen hidden">
+
+  <div class="card fade-element" id="perguntaCard">
+    <div id="pergunta"></div>
+    <button class="btn" onclick="mostrarResposta()">Mostrar resposta</button>
+  </div>
+
+  <div class="card fade-element fade-out" id="respostaCard">
+    <div id="resposta"></div>
+    <button class="btn" onclick="proximaPergunta()">Próxima pergunta</button>
+  </div>
+
+</section>
+
+<script>
+const perguntas = [
+{ pergunta: "01 - Que extensão nós usamos no VS Code para programar em Arduino?", resposta: "PlatformIO." },
+  { pergunta: "02 - Que linguagem usamos para programar em IOT?", resposta: "C++" },
+  { pergunta: "03 - O que significa HTML?", resposta: "HyperText Markup Language." },
+  { pergunta: "04 - Para que serve a ESP32?", resposta: "Para tornar objetos inteligentes." },
+  { pergunta: "05 - Qual a primeira coisa a escrever quando criamos um arquivo HTML?", resposta: "!" },
+  { pergunta: "06 - Em programação nós usamos linguagens como forma de facilitar o processo. Caso não utilizássemos, a programação seria por linguagem de máquina ou código binário. Verdadeiro ou falso?", resposta: "Verdadeiro." },
+  { pergunta: "07 - O que é um white hat?", resposta: "Um hacker pago pela própria empresa para invadir o sistema e mostrar erros na segurança." },
+  { pergunta: "08 - Qual o nome da mulher do Alan Turing, no filme 'O jogo da Imitação'?", resposta: "Joan Clarke." },
+  { pergunta: "09 - Quem é o pai da programação?", resposta: "Alan Turing." },
+  { pergunta: "10 - Como declara variável em Python?", resposta: "Nome da variável = valor." },
+  { pergunta: "11 - Quantos sensos compõem o programa 5S?", resposta: "5 sensos." },
+  { pergunta: "12 - Quais são os 5 sensos do 5S?", resposta: "Seiri (utilização), Seiton (organização), Seiso (limpeza), Seiketsu (padronização) e Shitsuke (disciplina)." },
+  { pergunta: "13 - Quantos desperdícios clássicos são identificados no Lean Manufacturing?", resposta: "7 desperdícios." },
+  { pergunta: "14 - Cite ao menos 3 dos desperdícios do Lean.", resposta: "Superprodução, Espera, Transporte, Excesso de Processamento, Estoque, Movimentação e Defeitos." },
+  { pergunta: "15 - Qual ferramenta Lean é utilizada para estruturar plano de ação com 7 perguntas?", resposta: "5W2H." },
+  { pergunta: "16 - O que significa a sigla 5W2H?", resposta: "What, Why, Where, When, Who, How e How Much." },
+  { pergunta: "17 - Qual é o principal objetivo do Kaizen?", resposta: "Melhoria contínua." },
+  { pergunta: "18 - Qual sistema Lean utiliza cartões para controle de produção?", resposta: "Kanban." },
+  { pergunta: "19 - O que são ativos?", resposta: "São todos os bens e direitos de uma empresa (dinheiro, estoque, máquinas, contas a receber)." },
+  { pergunta: "20 - O que é imposto?", resposta: "Tributo obrigatório pago ao governo, sem contraprestação direta específica." },
+  { pergunta: "21 - O que é ICMS?", resposta: "Imposto sobre Circulação de Mercadorias e Serviços." },
+  { pergunta: "22 - O que significa lucro?", resposta: "É o valor que sobra depois de subtrair todas as despesas das receitas." },
+  { pergunta: "23 - O que é Patrimônio Líquido?", resposta: "É a diferença entre ativo e passivo, representando o que pertence aos sócios." },
+  { pergunta: "24 - O que é capital de giro?", resposta: "É o dinheiro necessário para manter a empresa funcionando no dia a dia." },
+  { pergunta: "25 - O que significa a sigla SENAI?", resposta: "Serviço Nacional de Aprendizagem Industrial." },
+  { pergunta: "26 - O SENAI oferece cursos para qual área: indústria, medicina ou direito?", resposta: "Indústria." },
+  { pergunta: "27 - Em que ano foi criado o Serviço Nacional de Aprendizagem Industrial?", resposta: "1942" },
+  { pergunta: "28 - Quanto custa o pastelão do SENAI? 🤔", resposta: "R$11,50" },
+  { pergunta: "29 - Por que o SENAI é importante para o mercado de trabalho?", resposta: "Porque forma profissionais qualificados e aumenta as chances de emprego." },
+  { pergunta: "30 - Como o SENAI contribui para a indústria brasileira?", resposta: "Formando profissionais qualificados, aumentando a produtividade e a inovação." }
+];
+
+let indice = 0;
+
+function mostrarTela(id){
+  document.querySelectorAll(".screen").forEach(t => t.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+}
+
+function iniciar(){
+  mostrarTela("contador");
+
+  const seq = ["c3","c2","c1","cGo"];
+
+  seq.forEach((id,i)=>{
+    setTimeout(()=>{
+      if(i>0){
+        document.getElementById(seq[i-1]).classList.remove("show");
+      }
+      document.getElementById(id).classList.add("show");
+    }, i*1000);
+  });
+
+  setTimeout(()=>{
+    mostrarTela("quiz");
+    carregarPergunta();
+  },4000);
+}
+
+function carregarPergunta(){
+  const perguntaCard = document.getElementById("perguntaCard");
+  const respostaCard = document.getElementById("respostaCard");
+
+  respostaCard.classList.remove("fade-in");
+  respostaCard.classList.add("fade-out");
+
+  perguntaCard.classList.add("fade-out");
+
+  setTimeout(()=>{
+    document.getElementById("pergunta").textContent =
+      perguntas[indice].pergunta;
+
+    perguntaCard.classList.remove("fade-out");
+    perguntaCard.classList.add("fade-in");
+  },300);
+}
+
+function mostrarResposta(){
+  const respostaCard = document.getElementById("respostaCard");
+
+  document.getElementById("resposta").textContent =
+    perguntas[indice].resposta;
+
+  respostaCard.classList.remove("fade-out");
+  respostaCard.classList.add("fade-in");
+}
+
+function proximaPergunta(){
+  const perguntaCard = document.getElementById("perguntaCard");
+
+  perguntaCard.classList.add("fade-out");
+
+  setTimeout(()=>{
+    indice++;
+    if(indice < perguntas.length){
+      carregarPergunta();
+    } else {
+      document.getElementById("quiz").innerHTML = `
+        <div class="card fade-in">
+          <h1 class="title" style="font-size:clamp(2.5rem,6vw,4rem);">
+            Fim das perguntas!
+          </h1>
+          <p class="subtitle">Parabéns por completar tudo! </p>
+        </div>
+      `;
+    }
+  },300);
+}
+</script>
+
+</body>
+</html>
